@@ -340,14 +340,14 @@ string uvm_bitvec_to_string(T)(T value, size_t size,
     import esdl.data.bvec: to;
     if (size < T.SIZE) {
       if (value.isX()) {
-	T t_ = cast(T) 0.to!T;
+	T t_ = T(0);
 	for (int idx=0 ; idx<size; idx++) {
 	  t_[idx] = value[idx];
 	}
 	value = t_;
       }
       else {
-	T t_ = cast(T) 1.to!T;
+	T t_ = T(1);
 	value &= ((t_ << size) - 1);
       }
     }
