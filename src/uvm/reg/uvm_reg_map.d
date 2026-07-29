@@ -1904,8 +1904,12 @@ class uvm_reg_map: uvm_object, rand.barrier
       uvm_reg_map tmp_map = rw.get_map();
       
 
-      for (int i0=0; i0 < bus_width; i0++)
-	data.setByte(i0, p[i*bus_width+i0]);
+      for (int i0=0; i0 < bus_width; i0++) {
+	if (p.length > i*bus_width+i0)
+	  data.setByte(i0, p[i*bus_width+i0]);
+	else
+	  data.setByte(i0, 0);
+      }
 
       uvm_info("UVM/REG/ADDR",
 	       format("%s 0x%0x at 0x%0x via map \"%s\"...", op,
