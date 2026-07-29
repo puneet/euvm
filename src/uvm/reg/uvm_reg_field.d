@@ -1064,7 +1064,8 @@ class uvm_reg_field: uvm_object
 	  return false;
 	}
 
-	uvm_reg_map local_tmp_map = rw.get_map();
+	uvm_reg_map local_tmp_map = rw.get_local_map();
+	assert (local_tmp_map !is null);
 	map_info = local_tmp_map.get_reg_map_info(_m_parent);
 
 	if (map_info.frontdoor is null && map_info.unmapped) {
