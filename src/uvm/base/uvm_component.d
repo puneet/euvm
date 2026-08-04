@@ -3025,7 +3025,7 @@ abstract class uvm_component: uvm_report_object, ParContext, rand.barrier
     }
   }
 
-  void set_simulation_status(ubyte status) {
+  void set_test_exit_status(ubyte status) {
     get_root_entity.setExitStatus(status);
   }
 

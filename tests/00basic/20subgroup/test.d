@@ -32,7 +32,7 @@ class test_root: uvm_root
   mixin uvm_component_utils;
 
   override void initial() {
-    set_simulation_status(1);
+    set_test_exit_status(1);
     super.initial();
   }
 
@@ -62,7 +62,7 @@ class test: uvm_test
   {
     import std.stdio;
     writeln("** UVM TEST PASSED **");
-    set_simulation_status(0);
+    set_test_exit_status(0);
   }
 }
 
