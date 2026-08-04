@@ -128,21 +128,22 @@ class uvm_harness: RootEntity
     return getExitStatus();
   }
 
+  void run_test() { }
 }
 
-class uvm_root_plain: uvm_root
-{
-  override void initial() {
-    run_test();
-  }
-}
+// class uvm_test_root: uvm_root
+// {
+//   // override void initial() {
+//   //   run_test();
+//   // }
+// }
 
 alias uvm_testbench = uvm_tb;
 alias uvm_context = uvm_tb;
 
 class uvm_tb: uvm_harness
 {
-  uvm_entity!(uvm_root_plain) uvm_dock;
+  uvm_entity!(uvm_root) uvm_dock;
 
   override void setVpiCosimMode() {
     super.setVpiCosimMode();
@@ -155,6 +156,8 @@ class uvm_tb: uvm_harness
   uvm_entity_base get_uvm_entity() {
     return uvm_dock;
   }
+
+  alias get_root = get_uvm_root;
   uvm_root get_uvm_root() {
     return uvm_dock.get_uvm_root();
   }
@@ -166,6 +169,12 @@ class uvm_tb: uvm_harness
   void exec_in_uvm_context(FunctionThunk thunk) {
     uvm_dock.exec_in_context(thunk);
   }
+
+  // override this if you want to do something else
+  override void run_test() {
+    get_root().run_test();
+  }
+
 }
 
 class uvm_tb_custom_root(ROOT) if (is (ROOT: uvm_root)) : uvm_harness
@@ -277,6 +286,10 @@ class uvm_entity(T): uvm_entity_base if (is (T: uvm_root))
   @uvm_immutable_sync
     private T _uvm_root_instance;
 
+  uvm_root get_root() {
+    return _uvm_root_instance;
+  }
+
   this() {
     import std.random;		// uniform
     synchronized (this) {
@@ -336,8 +349,6 @@ class uvm_entity(T): uvm_entity_base if (is (T: uvm_root))
 
   void initial() {
     import uvm.base.uvm_misc: uvm_seed_map;
-    lockStage();
-    fileCaveat();
 
     m_uvm_core_state = uvm_core_state.UVM_CORE_INITIALIZING;
 
@@ -347,7 +358,7 @@ class uvm_entity(T): uvm_entity_base if (is (T: uvm_root))
     _uvm_root_instance.set_name(getFullName() ~ ".root" // "(" ~
 				// qualifiedTypeName!T ~ ")"
 				);
-    _uvm_root_instance.initialize(this);
+    get_root().initialize(this);
 
     uvm_init();
 
@@ -366,7 +377,8 @@ class uvm_entity(T): uvm_entity_base if (is (T: uvm_root))
       assert(false, "Could not determine UVM Harness");
     }
     harness.initial(); // execute user setup code from harness
-    _uvm_root_instance.initial();
+    harness.run_test();
+    get_root().finalize();
   }
 
   Task!(initial) _init;

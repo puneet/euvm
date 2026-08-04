@@ -112,7 +112,7 @@ interface uvm_root_intf
   RootEntity get_root_entity();
   void set_thread_context();
   void print_header();
-  void initial();
+  // void initial();
   void run_test(string test_name="");
   void set_timeout(Time timeout, bool overridable=true);  uvm_component find(string comp_match);
   void find_all(string comp_match, ref Queue!uvm_component comps,
@@ -160,6 +160,9 @@ class uvm_root: uvm_component, uvm_root_intf, rand.disable
   void initialize(uvm_entity_base base) {
     import uvm.base.uvm_domain;
     // import uvm.base.uvm_factory;
+
+    lockStage();
+    fileCaveat();
 
     synchronized (this) {
 
@@ -250,11 +253,11 @@ class uvm_root: uvm_component, uvm_root_intf, rand.disable
     m_check_verbosity();
   }
   
-  // this function can be overridden by the user
-  void initial() {
-    // run_test would be called in an override of initial function
-    // run_test();
-  }
+  // // this function can be overridden by the user
+  // void initial() {
+  //   // run_test would be called in an override of initial function
+  //   // run_test();
+  // }
 
   override string get_type_name() {
     return qualifiedTypeName!(typeof(this));
@@ -433,18 +436,7 @@ class uvm_root: uvm_component, uvm_root_intf, rand.disable
     m_uvm_core_state = uvm_core_state.UVM_CORE_FINISHED;
 
     // disable all locks that have been register with this root
-    this.finalize();
-
-    unlockStage();
-    
-    if (get_finish_on_completion()) {
-      debug(FINISH) {
-	import std.stdio;
-	writeln("finish_on_completion");
-      }
-      withdrawCaveat();
-      // finish();
-    }
+    // this.finalize();
   }
 
   // Function -- NODOCS -- die
@@ -483,10 +475,6 @@ class uvm_root: uvm_component, uvm_root_intf, rand.disable
     m_uvm_core_state=uvm_core_state.UVM_CORE_ABORTED;
           
     this.finalize();
-
-    unlockStage();
-    
-    withdrawCaveat();
     finish();
   }
   
@@ -1405,6 +1393,17 @@ class uvm_root: uvm_component, uvm_root_intf, rand.disable
       foreach (event; _async_events) {
 	event.disableWait();
       }
+    }
+
+    unlockStage();
+    
+    if (get_finish_on_completion()) {
+      debug(FINISH) {
+	import std.stdio;
+	writeln("finish_on_completion");
+      }
+      withdrawCaveat();
+      // finish();
     }
   }
 }
