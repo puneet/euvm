@@ -479,7 +479,7 @@ class uvm_comparer: uvm_policy
 	} // if (ret_val)
 
 	// Pop the name off the stack
-	_m_object_names.length =- 1;
+	_m_object_names.length -= 1;
 
 	// Only emit a message on a miscompare, and only if
 	// we're at the top level
@@ -867,7 +867,7 @@ class uvm_comparer: uvm_policy
       } // if (ret_val)
 
       // Pop the name off the stack
-      _m_object_names.length =- 1;
+      _m_object_names.length -= 1;
 
       // Only emit a message on a miscompare, and only if
       // we're at the top level
@@ -932,7 +932,7 @@ class uvm_comparer: uvm_policy
       } // if (ret_val)
 
       // Pop the name off the stack
-      _m_object_names.length =- 1;
+      _m_object_names.length -= 1;
 
       return ret_val;
     }
