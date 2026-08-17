@@ -534,6 +534,21 @@ abstract class uvm_report_catcher: uvm_callback, uvm_report_intf
 		    context_name, report_enabled_checked);
   }
 
+  // uvm_report_intf function implementation
+  // this is jsut a copy of uvm_global: uvm_report_enabled function
+  // compare with uvm_report_object implementation -- which is object specific
+  // this implementation just looks at uvm_root for figuring out if uvm_report is enabled
+  protected bool uvm_report_enabled(int verbosity,
+				    uvm_severity severity = uvm_severity.UVM_INFO,
+				    string id = "") {
+    import uvm.base.uvm_coreservice;
+    import uvm.base.uvm_root;
+    uvm_coreservice_t cs = uvm_coreservice_t.get();
+    uvm_root top = cs.get_root();
+    return top.uvm_report_enabled(verbosity, severity, id);
+  }
+  
+
   // Function -- NODOCS -- uvm_report
   //
   // Issues a message using the current message's report object.
