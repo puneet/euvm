@@ -628,7 +628,7 @@ uvm_report_object uvm_get_report_object() {
 // Static methods cannot call non-static methods of the same class.
 
 // @uvm-ieee 1800.2-2020 auto F.3.2.2
-int uvm_report_enabled (int verbosity,
+bool uvm_report_enabled(int verbosity,
 			uvm_severity severity = uvm_severity.UVM_INFO,
 			string id = "") {
   import uvm.base.uvm_coreservice;
