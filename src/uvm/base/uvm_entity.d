@@ -376,7 +376,8 @@ class uvm_entity(T): uvm_entity_base if (is (T: uvm_root))
     if (harness is null) {
       assert(false, "Could not determine UVM Harness");
     }
-    harness.initial(); // execute user setup code from harness
+    fork({harness.initial();}); // execute user setup code from harness
+    wait(0);
     harness.run_test();
     get_root().finalize();
   }
