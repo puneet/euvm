@@ -2779,6 +2779,7 @@ abstract class uvm_component: uvm_report_object, ParContext, rand.barrier
   @uvm_immutable_sync
   private uvm_event_pool _event_pool;
 
+  @uvm_public_sync
   private uint _recording_detail = uvm_verbosity.UVM_NONE;
 
 
